@@ -45,25 +45,12 @@ pair<bool, int> buscarPatronSubsecuencia(const string texto, const string patron
     int m = patron.length();
     int j = 0;
     
-    for (int i = 0; i < n && j < m; i++) {
+    for (int i = 0; i < n; i++) {
         if (texto[i] == patron[j]) {
-            if (j == 0) {
-                pair<bool, int> posicionInicio = {true, i + 1};
-
-                int tempI = i;
-                int tempJ = j;
-                
-                while (tempI < n && tempJ < m) {
-                    if (texto[tempI] == patron[tempJ]) {
-                        tempJ++;
-                        if (tempJ == m) {
-                            return posicionInicio;
-                        }
-                    }
-                    tempI++;
-                }
-            }
             j++;
+            if (j == m) {
+                return {true, i - m + 2}; // Return 1-based index
+            }
         }
     }
     return {false, -1};
