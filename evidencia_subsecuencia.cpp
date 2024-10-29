@@ -169,7 +169,7 @@ int main() {
     };
     
     for (const pair<string, string> busqueda : busquedas) {
-        pair<bool, int> resultado = buscaPatronSubsecuencia(busqueda.first, busqueda.second);
+        pair<bool, int> resultado = buscaPatronSubstring(busqueda.first, busqueda.second);
         if (resultado.first) {
             cout << "true " << resultado.second << endl;
         } else {
