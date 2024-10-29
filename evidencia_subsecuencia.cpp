@@ -1,6 +1,6 @@
-//Sofia Moreno Lopez A01028251
-//Omar Emiliano Sanchez Villegas A01749975
-//Nicole Davila Hernandez A01784217
+//Sofía Moreno López A01028251
+//Omar Emiliano Sánchez Villegas A01749975
+//Nicole Dávila Hernández A01784217
 
 #include <iostream>
 #include <fstream>
@@ -11,7 +11,7 @@
 using namespace std;
 
 //O(n)
-string leeArchivo(const string nombreArchivo) {
+string leerArchivo(const string nombreArchivo) {
     ifstream archivo(nombreArchivo);
     string contenido;
     string linea;
@@ -25,19 +25,19 @@ string leeArchivo(const string nombreArchivo) {
 vector<int> funcionZ(const string str) {
     int n = str.length();
     vector<int> z(n);
-    for (int i = 1, l = 0, derecha = 0; i < n; i++) {
+    for (int i = 1, izq = 0, derecha = 0; i < n; i++) {
         if (i <= derecha)
-            z[i] = min(derecha - i + 1, z[i - l]);
+            z[i] = min(derecha - i + 1, z[i - izq]);
         while (i + z[i] < n && str[z[i]] == str[i + z[i]])
             z[i]++;
         if (i + z[i] - 1 > derecha)
-            l = i, derecha = i + z[i] - 1;
+            izq = i, derecha = i + z[i] - 1;
     }
     return z;
 }
 
 //O(n*m)
-pair<bool, int> buscaPatronSubsecuencia(const string& texto, const string& patron) {
+pair<bool, int> buscarPatronSubsecuencia(const string texto, const string patron) {
     if (patron.empty()) return {false, -1};
     if (texto.empty()) return {false, -1};
     
@@ -48,7 +48,7 @@ pair<bool, int> buscaPatronSubsecuencia(const string& texto, const string& patro
     for (int i = 0; i < n && j < m; i++) {
         if (texto[i] == patron[j]) {
             if (j == 0) {
-                pair<bool, int> startPos = {true, i + 1}; // Convert to 1-based index
+                pair<bool, int> posicionInicio = {true, i + 1};
 
                 int tempI = i;
                 int tempJ = j;
@@ -57,7 +57,7 @@ pair<bool, int> buscaPatronSubsecuencia(const string& texto, const string& patro
                     if (texto[tempI] == patron[tempJ]) {
                         tempJ++;
                         if (tempJ == m) {
-                            return startPos;
+                            return posicionInicio;
                         }
                     }
                     tempI++;
@@ -70,12 +70,11 @@ pair<bool, int> buscaPatronSubsecuencia(const string& texto, const string& patro
 }
 
 //O(n + m)
-pair<bool, int> buscaPatronSubstring(const string texto, const string patron) {
+pair<bool, int> buscarPatronSubstr(const string texto, const string patron) {
     if (patron.empty() || texto.empty()) return {false, -1};
     
-    string concat = patron + "#" + texto;  // O(n + m)
-    vector<int> z = funcionZ(concat);      // O(n + m)
-    
+    string concat = patron + "#" + texto;
+    vector<int> z = funcionZ(concat);
     for (int i = patron.length() + 1; i < concat.length(); i++) {
         if (z[i] == patron.length()) {
             return {true, i - patron.length()}; 
@@ -85,7 +84,7 @@ pair<bool, int> buscaPatronSubstring(const string texto, const string patron) {
 }
 
 //O(n^2)
-pair<int, int> palindromoMasLargo(const string& str) {
+pair<int, int> palindromoMasLargo(const string str) {
     if (str.empty()) return {0, 0};
     
     string s = "#";
@@ -98,8 +97,8 @@ pair<int, int> palindromoMasLargo(const string& str) {
     vector<int> p(n, 0);  
     int centro = 0; 
     int derecha = 0;
-    int maxLen = 0;
-    int maxCentro = 0;
+    int lenMax = 0;
+    int centroMax = 0;
     
     for (int i = 0; i < n; i++) {
         if (i < derecha) {
@@ -107,12 +106,12 @@ pair<int, int> palindromoMasLargo(const string& str) {
             p[i] = min(derecha - i, p[mirror]);
         }
 
-        int left = i - (p[i] + 1);
-        int right = i + (p[i] + 1);
-        while (left >= 0 && right < n && s[left] == s[right]) {
+        int izquierda = i - (p[i] + 1);
+        int derecha = i + (p[i] + 1);
+        while (izquierda >= 0 && derecha < n && s[izquierda] == s[derecha]) {
             p[i]++;
-            left--;
-            right++;
+            izquierda--;
+            derecha++;
         }
 
         if (i + p[i] > derecha) {
@@ -120,56 +119,56 @@ pair<int, int> palindromoMasLargo(const string& str) {
             derecha = i + p[i];
         }
         
-        if (p[i] > maxLen) {
-            maxLen = p[i];
-            maxCentro = i;
+        if (p[i] > lenMax) {
+            lenMax = p[i];
+            centroMax = i;
         }
     }
 
-    int start = (maxCentro - maxLen) / 2;
-    int length = maxLen;
+    int inicio = (centroMax - lenMax) / 2;
+    int len = lenMax;
     
-    return {start + 1, start + length};
+    return {inicio + 1, inicio + len};
 }
 
 //O(n*m)
-pair<int, int> substringComunMasLargo(const string str1, const string str2) {
+pair<int, int> substrComunMasLarga(const string str1, const string str2) {
     if (str1.empty() || str2.empty()) return {0, 0};
     
     vector<vector<int>> dp(str1.length() + 1, vector<int>(str2.length() + 1, 0));
-    int longitudMax = 0;
+    int lenMax = 0;
     int posicionFinal = 0;
     
     for (int i = 1; i <= str1.length(); i++) {
         for (int j = 1; j <= str2.length(); j++) {
             if (str1[i-1] == str2[j-1]) {
                 dp[i][j] = dp[i-1][j-1] + 1;
-                if (dp[i][j] > longitudMax) {
-                    longitudMax = dp[i][j];
+                if (dp[i][j] > lenMax) {
+                    lenMax = dp[i][j];
                     posicionFinal = i;
                 }
             }
         }
     }
     
-    return {posicionFinal - longitudMax + 1, posicionFinal};
+    return {posicionFinal - lenMax + 1, posicionFinal};
 }
 
 int main() {
-    string transmision1 = leeArchivo("transmission1.txt");
-    string transmision2 = leeArchivo("transmission2.txt");
-    string mcode1 = leeArchivo("mcode1.txt");
-    string mcode2 = leeArchivo("mcode2.txt");
-    string mcode3 = leeArchivo("mcode3.txt");
+    string transmision1 = leerArchivo("transmission1.txt");
+    string transmision2 = leerArchivo("transmission2.txt");
+    string codigoM1 = leerArchivo("mcode1.txt");
+    string codigoM2 = leerArchivo("mcode2.txt");
+    string codigoM3 = leerArchivo("mcode3.txt");
     
-    // Parte 1: Busqueda de patrones
+    // Parte 1: Búsqueda de patrones
     vector<pair<string, string>> busquedas = {
-        {transmision1, mcode1}, {transmision1, mcode2}, {transmision1, mcode3},
-        {transmision2, mcode1}, {transmision2, mcode2}, {transmision2, mcode3}
+        {transmision1, codigoM1}, {transmision1, codigoM2}, {transmision1, codigoM3},
+        {transmision2, codigoM1}, {transmision2, codigoM2}, {transmision2, codigoM3}
     };
     
     for (const pair<string, string> busqueda : busquedas) {
-        pair<bool, int> resultado = buscaPatronSubstring(busqueda.first, busqueda.second);
+        pair<bool, int> resultado = buscarPatronSubstr(busqueda.first, busqueda.second);
         if (resultado.first) {
             cout << "true " << resultado.second << endl;
         } else {
@@ -177,16 +176,16 @@ int main() {
         }
     }
     
-    // Parte 2: Busqueda de palindromos
+    // Parte 2: Búsqueda de palíndromos
     pair<int, int> palindromo1 = palindromoMasLargo(transmision1);
     pair<int, int> palindromo2 = palindromoMasLargo(transmision2);
     
     cout << palindromo1.first << " " << palindromo1.second << endl;
     cout << palindromo2.first << " " << palindromo2.second << endl;
     
-    // Parte 3: Substring comun mas largo
-    pair<int, int> substringComun = substringComunMasLargo(transmision1, transmision2);
-    cout << substringComun.first << " " << substringComun.second << endl;
+    // Parte 3: Substr común más larga
+    pair<int, int> substrComun = substrComunMasLarga(transmision1, transmision2);
+    cout << substrComun.first << " " << substrComun.second << endl;
     
     return 0;
 }
