@@ -1,3 +1,4 @@
-Sofia Moreno Lopez A01028251
-Omar Emiliano Sanchez Villegas A01749975
-Nicole Davila Hernandez A01784217
+Sofia Moreno Lopez A01028251 - funcion de busqueda de patrones, substrings y subsecuencias, z funcg
+Omar Emiliano Sanchez Villegas A01749975 - funcion de algoritmo de manacher
+Nicole Davila Hernandez A01784217 - funcion longest common substring, lectura de archivos
+
